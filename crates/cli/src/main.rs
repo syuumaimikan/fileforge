@@ -97,6 +97,17 @@ enum Commands {
         #[arg(long, default_value_t = 100)]
         limit: usize,
     },
+
+    Extract {
+        path: PathBuf,
+        keyword: String,
+
+        #[arg(short, long)]
+        output: PathBuf,
+
+        #[arg(long, default_value_t = 0)]
+        limit: usize,
+    },
 }
 
 fn main() -> Result<()> {
@@ -146,6 +157,13 @@ fn main() -> Result<()> {
             after,
             limit,
         } => search_context(path, keyword, before, after, limit)?,
+
+        Commands::Extract {
+            path,
+            keyword,
+            output,
+            limit,
+        } => extract_lines(path, keyword, output, limit)?,
     }
 
     Ok(())
@@ -337,5 +355,35 @@ fn search_context(
     }
 
     eprintln!("matched: {}", count);
+    Ok(())
+}
+
+fn extract_lines(path: PathBuf, keyword: String, output: PathBuf, limit: usize) -> Result<()> {
+    let input = File::open(&path)?;
+    let reader = BufReader::with_capacity(8 * 1024 * 1024, input);
+
+    let output_file = File::create(&output)?;
+    let mut writer = BufWriter::with_capacity(8 * 1024 * 1024, output_file);
+
+    let mut count = 0usize;
+
+    for line in reader.lines() {
+        let line = line?;
+
+        if line.contains(&keyword) {
+            writeln!(writer, "{}", line)?;
+            count += 1;
+
+            if limit > 0 && count >= limit {
+                break;
+            }
+        }
+    }
+
+    writer.flush()?;
+
+    println!("extracted: {}", count);
+    println!("output: {}", output.display());
+
     Ok(())
 }
