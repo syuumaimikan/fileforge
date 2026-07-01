@@ -1,12 +1,8 @@
-use std::{
-    fs::File,
-    io::{BufRead, BufReader},
-    path::PathBuf,
-    time::Instant,
-};
+use std::{path::PathBuf, time::Instant};
 
 use aho_corasick::AhoCorasick;
-use fileforge_core::{Result, SearchHit};
+use fileforge_core::{Config, Result, SearchHit};
+use fileforge_storage::ReaderFactory;
 
 #[derive(Debug, Clone)]
 pub struct SearchOptions {
@@ -25,61 +21,38 @@ pub struct SearchProgress {
 pub struct SearchEngine;
 
 impl SearchEngine {
-    pub fn search_text<F, P>(
-        options: SearchOptions,
-        mut on_hit: F,
-        mut on_progress: P,
-    ) -> Result<usize>
+    pub fn search_text<F, P>(options: SearchOptions, mut on_hit: F, mut on_progress: P) -> Result<usize>
     where
         F: FnMut(SearchHit),
         P: FnMut(SearchProgress),
     {
+        let total_bytes = std::fs::metadata(&options.path)?.len();
         let matcher = AhoCorasick::new(&options.keywords)?;
-        let file = File::open(&options.path)?;
-        let total_bytes = file.metadata()?.len();
-        let reader = BufReader::with_capacity(8 * 1024 * 1024, file);
+        let config = Config::default();
+        let mut reader = ReaderFactory::open(&options.path, &config)?;
 
-        let mut offset = 0u64;
         let mut count = 0usize;
         let mut last_progress = Instant::now();
+        let mut read_bytes = 0u64;
 
-        for (i, line) in reader.lines().enumerate() {
-            let line = line?;
-            let line_size = line.len() as u64 + 1;
-
-            if matcher.is_match(&line) {
+        while let Some(record) = reader.next_record()? {
+            read_bytes = record.offset + record.data.len() as u64 + 1;
+            if matcher.is_match(record.data.as_ref()) {
                 on_hit(SearchHit {
                     file: options.path.clone(),
-                    line: i as u64 + 1,
-                    offset,
-                    text: line.clone(),
+                    line: record.line,
+                    offset: record.offset,
+                    text: record.data.to_string(),
                 });
-
                 count += 1;
-
-                if options.limit > 0 && count >= options.limit {
-                    break;
-                }
+                if options.limit > 0 && count >= options.limit { break; }
             }
-
-            offset += line_size;
-
             if last_progress.elapsed().as_millis() >= 500 {
-                on_progress(SearchProgress {
-                    read_bytes: offset,
-                    total_bytes,
-                    matched: count,
-                });
+                on_progress(SearchProgress { read_bytes, total_bytes, matched: count });
                 last_progress = Instant::now();
             }
         }
-
-        on_progress(SearchProgress {
-            read_bytes: offset,
-            total_bytes,
-            matched: count,
-        });
-
+        on_progress(SearchProgress { read_bytes, total_bytes, matched: count });
         Ok(count)
     }
 }

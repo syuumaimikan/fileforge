@@ -1,11 +1,11 @@
 [package]
-name = "fileforge-text"
+name = "fileforge-csv"
 version = "0.3.0"
 edition = "2021"
 
 [dependencies]
 anyhow = "1"
+csv = "1"
 fileforge-core = { path = "../fileforge-core" }
 fileforge-analyzer = { path = "../fileforge-analyzer" }
 fileforge-encoding = { path = "../fileforge-encoding" }
-fileforge-storage = { path = "../fileforge-storage" }

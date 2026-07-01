@@ -1,8 +1,9 @@
 [package]
-name = "fileforge-analyzer"
+name = "fileforge-query"
 version = "0.3.0"
 edition = "2021"
 
 [dependencies]
 anyhow = "1"
 fileforge-core = { path = "../fileforge-core" }
+fileforge-storage = { path = "../fileforge-storage" }

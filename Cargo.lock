@@ -136,38 +136,64 @@ dependencies = [
 
 [[package]]
 name = "fileforge-analyzer"
-version = "0.1.0"
+version = "0.3.0"
 dependencies = [
+ "anyhow",
  "fileforge-core",
 ]
 
 [[package]]
 name = "fileforge-cli"
-version = "0.1.0"
+version = "0.3.0"
 dependencies = [
  "anyhow",
  "clap",
+ "fileforge-analyzer",
  "fileforge-core",
+ "fileforge-csv",
  "fileforge-engine",
  "fileforge-index",
+ "fileforge-jsonl",
+ "fileforge-query",
+ "fileforge-storage",
  "fileforge-text",
 ]
 
 [[package]]
 name = "fileforge-core"
-version = "0.1.0"
+version = "0.3.0"
 dependencies = [
  "anyhow",
 ]
 
 [[package]]
+name = "fileforge-csv"
+version = "0.3.0"
+dependencies = [
+ "anyhow",
+ "csv",
+ "fileforge-analyzer",
+ "fileforge-core",
+ "fileforge-encoding",
+]
+
+[[package]]
+name = "fileforge-encoding"
+version = "0.3.0"
+dependencies = [
+ "anyhow",
+ "fileforge-core",
+]
+
+[[package]]
 name = "fileforge-engine"
-version = "0.1.0"
+version = "0.3.0"
 dependencies = [
  "aho-corasick",
  "anyhow",
  "csv",
  "fileforge-core",
+ "fileforge-storage",
  "regex",
  "serde_json",
 ]
@@ -181,15 +207,47 @@ dependencies = [
 ]
 
 [[package]]
+name = "fileforge-jsonl"
+version = "0.3.0"
+dependencies = [
+ "anyhow",
+ "fileforge-analyzer",
+ "fileforge-core",
+ "fileforge-encoding",
+ "fileforge-storage",
+ "serde_json",
+]
+
+[[package]]
 name = "fileforge-plugin"
 version = "0.1.0"
 
 [[package]]
-name = "fileforge-text"
-version = "0.1.0"
+name = "fileforge-query"
+version = "0.3.0"
 dependencies = [
  "anyhow",
  "fileforge-core",
+ "fileforge-storage",
+]
+
+[[package]]
+name = "fileforge-storage"
+version = "0.3.0"
+dependencies = [
+ "fileforge-core",
+ "memmap2",
+]
+
+[[package]]
+name = "fileforge-text"
+version = "0.3.0"
+dependencies = [
+ "anyhow",
+ "fileforge-analyzer",
+ "fileforge-core",
+ "fileforge-encoding",
+ "fileforge-storage",
 ]
 
 [[package]]
@@ -211,10 +269,25 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8f42a60cbdf9a97f5d2305f08a87dc4e09308d1276d28c869c684d7777685682"
 
 [[package]]
+name = "libc"
+version = "0.2.186"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "68ab91017fe16c622486840e4c83c9a37afeff978bd239b5293d61ece587de66"
+
+[[package]]
 name = "memchr"
 version = "2.8.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "88904434abc2901f197fe8cc55f0445e7ded921dba5911dad2e2b39b48e663c4"
+
+[[package]]
+name = "memmap2"
+version = "0.9.11"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d1219ed1b7f229ee7104d281dd01d6802fe28bb6e95d292942c4daacdeb798c0"
+dependencies = [
+ "libc",
+]
 
 [[package]]
 name = "once_cell_polyfill"

@@ -6,6 +6,8 @@ members = ["crates/fileforge-analyzer",
     "crates/fileforge-index", 
     "crates/fileforge-plugin",
     "crates/fileforge-text",
-    "crates/fileforge-analyzer",
+    "crates/fileforge-analyzer", 
+    "crates/fileforge-storage", 
+    "crates/fileforge-encoding",
 ]
 resolver = "2"

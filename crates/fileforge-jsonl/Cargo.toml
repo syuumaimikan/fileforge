@@ -1,10 +1,11 @@
 [package]
-name = "fileforge-text"
+name = "fileforge-jsonl"
 version = "0.3.0"
 edition = "2021"
 
 [dependencies]
 anyhow = "1"
+serde_json = "1"
 fileforge-core = { path = "../fileforge-core" }
 fileforge-analyzer = { path = "../fileforge-analyzer" }
 fileforge-encoding = { path = "../fileforge-encoding" }

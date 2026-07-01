@@ -6,9 +6,6 @@ pub struct Config {
 
 impl Default for Config {
     fn default() -> Self {
-        Self {
-            buffer_size: 8 * 1024 * 1024,
-            progress_update_ms: 500,
-        }
+        Self { buffer_size: 8 * 1024 * 1024, progress_update_ms: 500 }
     }
 }

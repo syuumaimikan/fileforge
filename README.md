@@ -1,7 +1,42 @@
-# Tauri + SvelteKit + TypeScript
+# FileForge v0.3
 
-This template should help get you started developing with Tauri, SvelteKit and TypeScript in Vite.
+Rust製の巨大ファイル解析ツールです。
 
-## Recommended IDE Setup
+## 主な構成
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer).
+- fileforge-cli
+- fileforge-core
+- fileforge-engine
+- fileforge-storage
+- fileforge-analyzer
+- fileforge-encoding
+- fileforge-text
+- fileforge-csv
+- fileforge-jsonl
+- fileforge-query
+- fileforge-index
+
+## 主な機能
+
+- txt/log検索
+- 複数キーワード検索
+- regex検索
+- JSONL key/value検索
+- .ffidxインデックス作成
+- 行ジャンプ
+- AnalyzerManager
+- Text/CSV/JSONL Analyzer
+- ReaderFactory
+- LineReader / ChunkReader / MemoryMapReader
+- UTF-8/BOM/UTF-16簡易判定
+- Query: contains(text,"ERROR") / AND / OR / NOT
+
+## 実行例
+
+```bash
+cargo run -p fileforge-cli -- analyze testdata/sample.log
+cargo run -p fileforge-cli -- analyze testdata/sample.csv
+cargo run -p fileforge-cli -- analyze testdata/sample.jsonl
+cargo run -p fileforge-cli -- query testdata/sample.log "ERROR OR WARN"
+cargo run -p fileforge-cli -- query testdata/sample.log "contains(text,\"ERROR\")"
+```

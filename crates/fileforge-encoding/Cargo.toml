@@ -1,0 +1,8 @@
+[package]
+name = "fileforge-encoding"
+version = "0.3.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1"
+fileforge-core = { path = "../fileforge-core" }

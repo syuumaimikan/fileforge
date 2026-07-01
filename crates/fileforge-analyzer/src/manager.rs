@@ -1,31 +1,26 @@
-use std::{collections::HashMap, sync::Arc};
+use std::{path::Path, sync::Arc};
 
-use crate::Analyzer;
+use fileforge_core::{AnalysisResult, Result};
 
-pub struct AnalyzerManager {
-    analyzers: HashMap<String, Arc<dyn Analyzer>>,
-}
+use crate::{Analyzer, FileProbe};
+
+pub struct AnalyzerManager { analyzers: Vec<Arc<dyn Analyzer>> }
 
 impl AnalyzerManager {
-    pub fn new() -> Self {
-        Self {
-            analyzers: HashMap::new(),
-        }
+    pub fn new() -> Self { Self { analyzers: Vec::new() } }
+
+    pub fn register<A>(&mut self, analyzer: A) where A: Analyzer + 'static {
+        self.analyzers.push(Arc::new(analyzer));
     }
 
-    pub fn register<A>(&mut self, analyzer: A)
-    where
-        A: Analyzer + 'static,
-    {
-        let analyzer = Arc::new(analyzer);
-
-        for ext in analyzer.extensions() {
-            self.analyzers
-                .insert(ext.to_ascii_lowercase(), analyzer.clone());
+    pub fn open<P: AsRef<Path>>(&self, path: P) -> Result<AnalysisResult> {
+        let path = path.as_ref();
+        let probe = FileProbe::from_path(path)?;
+        for analyzer in &self.analyzers {
+            if analyzer.can_open(&probe) { return analyzer.analyze(path); }
         }
-    }
-
-    pub fn get(&self, ext: &str) -> Option<Arc<dyn Analyzer>> {
-        self.analyzers.get(&ext.to_ascii_lowercase()).cloned()
+        anyhow::bail!("対応するAnalyzerが見つかりません: {}", path.display());
     }
 }
+
+impl Default for AnalyzerManager { fn default() -> Self { Self::new() } }
