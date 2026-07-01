@@ -108,6 +108,10 @@ enum Commands {
         #[arg(long, default_value_t = 0)]
         limit: usize,
     },
+
+    Stats {
+        path: PathBuf,
+    },
 }
 
 fn main() -> Result<()> {
@@ -164,6 +168,8 @@ fn main() -> Result<()> {
             output,
             limit,
         } => extract_lines(path, keyword, output, limit)?,
+
+        Commands::Stats { path } => stats_log(path)?,
     }
 
     Ok(())
@@ -384,6 +390,40 @@ fn extract_lines(path: PathBuf, keyword: String, output: PathBuf, limit: usize) 
 
     println!("extracted: {}", count);
     println!("output: {}", output.display());
+
+    Ok(())
+}
+
+fn stats_log(path: PathBuf) -> Result<()> {
+    let file = File::open(&path)?;
+    let reader = BufReader::with_capacity(8 * 1024 * 1024, file);
+
+    let mut total = 0u64;
+    let mut info = 0u64;
+    let mut warn = 0u64;
+    let mut error = 0u64;
+    let mut other = 0u64;
+
+    for line in reader.lines() {
+        let line = line?;
+        total += 1;
+
+        if line.contains("ERROR") {
+            error += 1;
+        } else if line.contains("WARN") {
+            warn += 1;
+        } else if line.contains("INFO") {
+            info += 1;
+        } else {
+            other += 1;
+        }
+    }
+
+    println!("total: {}", total);
+    println!("INFO : {}", info);
+    println!("WARN : {}", warn);
+    println!("ERROR: {}", error);
+    println!("OTHER: {}", other);
 
     Ok(())
 }
