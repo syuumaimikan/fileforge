@@ -11,6 +11,6 @@ vite.config.ts.timestamp-*
 
 target/
 
-crates/cli/target/
+crates/**/target/
 
 testdata/
