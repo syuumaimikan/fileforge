@@ -1,0 +1,11 @@
+C:\Users\yuang\Rust_Proj\fileforge\target\debug\deps\console-a18aa22b110c2305.d: C:\Users\yuang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\console-0.16.3\src\lib.rs C:\Users\yuang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\console-0.16.3\src\common_term.rs C:\Users\yuang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\console-0.16.3\src\kb.rs C:\Users\yuang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\console-0.16.3\src\term.rs C:\Users\yuang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\console-0.16.3\src\utils.rs C:\Users\yuang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\console-0.16.3\src\windows_term\mod.rs C:\Users\yuang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\console-0.16.3\src\ansi.rs
+
+C:\Users\yuang\Rust_Proj\fileforge\target\debug\deps\libconsole-a18aa22b110c2305.rmeta: C:\Users\yuang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\console-0.16.3\src\lib.rs C:\Users\yuang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\console-0.16.3\src\common_term.rs C:\Users\yuang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\console-0.16.3\src\kb.rs C:\Users\yuang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\console-0.16.3\src\term.rs C:\Users\yuang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\console-0.16.3\src\utils.rs C:\Users\yuang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\console-0.16.3\src\windows_term\mod.rs C:\Users\yuang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\console-0.16.3\src\ansi.rs
+
+C:\Users\yuang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\console-0.16.3\src\lib.rs:
+C:\Users\yuang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\console-0.16.3\src\common_term.rs:
+C:\Users\yuang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\console-0.16.3\src\kb.rs:
+C:\Users\yuang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\console-0.16.3\src\term.rs:
+C:\Users\yuang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\console-0.16.3\src\utils.rs:
+C:\Users\yuang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\console-0.16.3\src\windows_term\mod.rs:
+C:\Users\yuang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\console-0.16.3\src\ansi.rs:
