@@ -135,6 +135,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "fileforge-analyzer"
+version = "0.1.0"
+dependencies = [
+ "fileforge-core",
+]
+
+[[package]]
 name = "fileforge-cli"
 version = "0.1.0"
 dependencies = [
@@ -172,6 +179,10 @@ dependencies = [
  "anyhow",
  "fileforge-core",
 ]
+
+[[package]]
+name = "fileforge-plugin"
+version = "0.1.0"
 
 [[package]]
 name = "fileforge-text"
