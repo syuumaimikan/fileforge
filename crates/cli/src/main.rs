@@ -8,40 +8,15 @@ use anyhow::Result;
 use clap::{Parser, Subcommand};
 use regex::Regex;
 use serde_json::Value;
+use std::io::{BufWriter, Write};
 
 mod progress;
 use progress::Progress;
 
-use std::io::{BufWriter, Write};
+mod search;
+use search::SearchEngine;
 
-fn generate_log(path: PathBuf, lines: u64) -> Result<()> {
-    let file = File::create(path)?;
-    let mut writer = BufWriter::with_capacity(8 * 1024 * 1024, file);
-
-    for i in 0..lines {
-        let level = match i % 10 {
-            0 => "ERROR",
-            1 => "WARN",
-            _ => "INFO",
-        };
-
-        writeln!(
-            writer,
-            "2026-07-01 12:{:02}:{:02} {} User={} Message number {}",
-            (i / 60) % 60,
-            i % 60,
-            level,
-            i % 1000,
-            i
-        )?;
-    }
-
-    writer.flush()?;
-
-    println!("Generated {} lines.", lines);
-
-    Ok(())
-}
+mod index;
 
 #[derive(Parser)]
 #[command(name = "fileforge")]
@@ -93,6 +68,10 @@ enum Commands {
         #[arg(long, default_value_t = 1_000_000)]
         lines: u64,
     },
+
+    Index {
+        path: PathBuf,
+    },
 }
 
 fn main() -> Result<()> {
@@ -126,12 +105,17 @@ fn main() -> Result<()> {
         } => search_csv(path, column, keyword, limit)?,
 
         Commands::GenerateLog { path, lines } => generate_log(path, lines)?,
+
+        Commands::Index { path } => {
+            index::build_line_index(path)?;
+        }
     }
 
     Ok(())
 }
 
 fn search_text(path: PathBuf, keyword: String, limit: usize) -> Result<()> {
+    let engine = SearchEngine::new(&vec![keyword.clone()]);
     let file = File::open(&path)?;
     let file_size = file.metadata()?.len();
 
@@ -145,7 +129,7 @@ fn search_text(path: PathBuf, keyword: String, limit: usize) -> Result<()> {
 
         progress.add((line.len() + 1) as u64);
 
-        if line.contains(&keyword) {
+        if engine.is_match(&line) {
             println!("{}: {}", i + 1, line);
             count += 1;
 
@@ -238,5 +222,34 @@ fn search_csv(path: PathBuf, column: String, keyword: String, limit: usize) -> R
     }
 
     eprintln!("matched: {}", count);
+    Ok(())
+}
+
+fn generate_log(path: PathBuf, lines: u64) -> Result<()> {
+    let file = File::create(path)?;
+    let mut writer = BufWriter::with_capacity(8 * 1024 * 1024, file);
+
+    for i in 0..lines {
+        let level = match i % 10 {
+            0 => "ERROR",
+            1 => "WARN",
+            _ => "INFO",
+        };
+
+        writeln!(
+            writer,
+            "2026-07-01 12:{:02}:{:02} {} User={} Message number {}",
+            (i / 60) % 60,
+            i % 60,
+            level,
+            i % 1000,
+            i
+        )?;
+    }
+
+    writer.flush()?;
+
+    println!("Generated {} lines.", lines);
+
     Ok(())
 }
