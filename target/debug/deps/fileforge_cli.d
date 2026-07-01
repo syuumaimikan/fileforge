@@ -1,5 +1,6 @@
-C:\Users\yuang\Rust_Proj\fileforge\target\debug\deps\fileforge_cli.d: creates\cli\src\main.rs
+C:\Users\yuang\Rust_Proj\fileforge\target\debug\deps\fileforge_cli.d: crates\cli\src\main.rs crates\cli\src\progress.rs
 
-C:\Users\yuang\Rust_Proj\fileforge\target\debug\deps\fileforge_cli.exe: creates\cli\src\main.rs
+C:\Users\yuang\Rust_Proj\fileforge\target\debug\deps\fileforge_cli.exe: crates\cli\src\main.rs crates\cli\src\progress.rs
 
-creates\cli\src\main.rs:
+crates\cli\src\main.rs:
+crates\cli\src\progress.rs:
