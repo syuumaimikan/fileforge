@@ -8,6 +8,7 @@ use anyhow::Result;
 use clap::{Parser, Subcommand};
 use regex::Regex;
 use serde_json::Value;
+use std::collections::VecDeque;
 use std::io::{BufWriter, Write};
 
 mod progress;
@@ -72,6 +73,30 @@ enum Commands {
     Index {
         path: PathBuf,
     },
+
+    Jump {
+        path: PathBuf,
+
+        #[arg(long)]
+        line: u64,
+
+        #[arg(long, default_value_t = 20)]
+        show: usize,
+    },
+
+    Context {
+        path: PathBuf,
+        keyword: String,
+
+        #[arg(long, default_value_t = 2)]
+        before: usize,
+
+        #[arg(long, default_value_t = 2)]
+        after: usize,
+
+        #[arg(long, default_value_t = 100)]
+        limit: usize,
+    },
 }
 
 fn main() -> Result<()> {
@@ -109,6 +134,18 @@ fn main() -> Result<()> {
         Commands::Index { path } => {
             index::build_line_index(path)?;
         }
+
+        Commands::Jump { path, line, show } => {
+            index::jump_line(path, line, show)?;
+        }
+
+        Commands::Context {
+            path,
+            keyword,
+            before,
+            after,
+            limit,
+        } => search_context(path, keyword, before, after, limit)?,
     }
 
     Ok(())
@@ -251,5 +288,54 @@ fn generate_log(path: PathBuf, lines: u64) -> Result<()> {
 
     println!("Generated {} lines.", lines);
 
+    Ok(())
+}
+
+fn search_context(
+    path: PathBuf,
+    keyword: String,
+    before: usize,
+    after: usize,
+    limit: usize,
+) -> Result<()> {
+    let file = File::open(&path)?;
+    let reader = BufReader::with_capacity(8 * 1024 * 1024, file);
+
+    let mut prev_lines: VecDeque<(usize, String)> = VecDeque::new();
+    let mut after_left = 0usize;
+    let mut count = 0usize;
+
+    for (i, line) in reader.lines().enumerate() {
+        let line_number = i + 1;
+        let line = line?;
+
+        if line.contains(&keyword) {
+            println!("----- match {} -----", count + 1);
+
+            for (n, prev) in &prev_lines {
+                println!("{}- {}", n, prev);
+            }
+
+            println!("{}> {}", line_number, line);
+
+            after_left = after;
+            count += 1;
+
+            if count >= limit {
+                break;
+            }
+        } else if after_left > 0 {
+            println!("{}+ {}", line_number, line);
+            after_left -= 1;
+        }
+
+        prev_lines.push_back((line_number, line));
+
+        if prev_lines.len() > before {
+            prev_lines.pop_front();
+        }
+    }
+
+    eprintln!("matched: {}", count);
     Ok(())
 }
