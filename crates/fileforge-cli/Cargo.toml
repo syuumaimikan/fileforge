@@ -1,0 +1,16 @@
+[package]
+name = "fileforge-cli"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "fileforge"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+fileforge-core = { path = "../fileforge-core" }
+fileforge-engine = { path = "../fileforge-engine" }
+fileforge-index = { path = "../fileforge-index" }
+fileforge-text = { path = "../fileforge-text" }

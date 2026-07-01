@@ -1,5 +1,9 @@
 [workspace]
 members = [
-    "crates/cli"
-,]
+    "crates/fileforge-cli",
+    "crates/fileforge-core",
+    "crates/fileforge-engine",
+    "crates/fileforge-index",
+    "crates/fileforge-text",
+]
 resolver = "2"
